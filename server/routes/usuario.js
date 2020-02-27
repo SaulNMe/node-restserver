@@ -4,7 +4,9 @@ const bcrypt = require('bcrypt');
 const _ = require('underscore');
 const app = express();
 
-app.get('/usuario', (req, res) => {
+const { verificaToken, verificaRolAdmin } = require('../middleware/authentication');
+
+app.get('/usuario', verificaToken, (req, res) => {
 
     let from = req.query.from || 0;
     from = Number(from);
@@ -33,7 +35,7 @@ app.get('/usuario', (req, res) => {
         });
 });
 
-app.post('/usuario', (req, res) => {
+app.post('/usuario', [verificaToken, verificaRolAdmin], (req, res) => {
 
     let body = req.body;
 
@@ -54,23 +56,32 @@ app.post('/usuario', (req, res) => {
 
         res.json({
             ok: true,
-            usuario: usuarioDB
+            usuario: usuarioDB,
         });
     });
 });
 
-app.put('/usuario/:id', (req, res) => {
+app.put('/usuario/:id', [verificaToken, verificaRolAdmin], (req, res) => {
     let id = req.params.id;
     //Valida que aunque mande parámetros que coincidan con el modelo, sólo acepte los siguientes
     let body = _.pick(req.body, ['nombre', 'email', 'img', 'role', 'estado']);
 
     Usuario.findByIdAndUpdate(id, body, { new: true, runValidators: true }, (err, usuarioDB) => {
         if (err) {
-            return res.status(200).json({
+            return res.status(400).json({
                 ok: false,
                 err
             })
         }
+        if (!usuarioDB) {
+            return res.status(500).json({
+                ok: false,
+                err: {
+                    message: "El usuario no existe"
+                }
+            })
+        }
+
         res.json({
             ok: true,
             usuario: usuarioDB
@@ -79,22 +90,22 @@ app.put('/usuario/:id', (req, res) => {
 });
 
 
-app.delete('/usuario/:id', (req, res) => {
+app.delete('/usuario/:id', [verificaToken, verificaRolAdmin], (req, res) => {
     let id = req.params.id;
 
     let estado = { estado: false }
 
     //Usuario.findByIdAndRemove(id, (err, usuarioBorrado) => {
-    Usuario.findByIdAndUpdate(id, estado, { new: true }, (err, usuarioBorrado) => {
+    Usuario.findByIdAdUpdate(id, estado, { new: true }, (err, usuarioBorrado) => {
         if (err) {
-            return res.status(200).json({
+            return res.status(400).json({
                 ok: false,
                 err
             })
         }
 
         if (!usuarioBorrado) {
-            return res.status(200).json({
+            return res.status(500).json({
                 ok: false,
                 err: {
                     message: "El usuario no existe"
