@@ -38,7 +38,7 @@ process.env.SEED = process.env.SEED ||  'secret-seed-loquillo';
 | Google CLIENT_ID
 |--------------------------------------------------
 */
-process.env.CLIEN_ID = process.env.CLIEN_ID || '1054779255680-s1eud6febal7ra4evvgpdetjv9e97ndq.apps.googleusercontent.com';
+process.env.CLIENT_ID = process.env.CLIENT_ID || '1054779255680-s1eud6febal7ra4evvgpdetjv9e97ndq.apps.googleusercontent.com';
 
 let urlDB;
 if(process.env.NODE_ENV === 'dev'){
