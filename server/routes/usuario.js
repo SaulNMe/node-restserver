@@ -96,7 +96,7 @@ app.delete('/usuario/:id', [verificaToken, verificaRolAdmin], (req, res) => {
     let estado = { estado: false }
 
     //Usuario.findByIdAndRemove(id, (err, usuarioBorrado) => {
-    Usuario.findByIdAdUpdate(id, estado, { new: true }, (err, usuarioBorrado) => {
+    Usuario.findByIdAndUpdate(id, estado, { new: true }, (err, usuarioBorrado) => {
         if (err) {
             return res.status(400).json({
                 ok: false,
