@@ -48,8 +48,4 @@ else {
     urlDB = process.env.MONGO_URI;
 }
 
-// Temporal config 
-urlDB = 'mongodb+srv://loquillonme:3xFJv91H3ZH27Bre@cluster0-8hkl0.mongodb.net/cafe?retryWrites=true&w=majority';
-
-
 process.env.URL_DB = urlDB;

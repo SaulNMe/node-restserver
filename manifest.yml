@@ -1,0 +1,5 @@
+---
+applications: 
+- name: restserver
+  mamory: 128M
+  buildpack: nodejs_buildpack
